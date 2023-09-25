@@ -15,6 +15,8 @@ import com.cgutman.androidremotedebugger.AdbUtils;
 public class DeviceConnection implements Closeable {
 	private static final int CONN_TIMEOUT = 5000;
 
+	private static final String ON_CONNECTED_COMMAND = "export PATH=$PATH:/data/local/tmp";
+
 	private String host;
 	private int port;
 	private DeviceConnectionListener listener;
@@ -32,6 +34,12 @@ public class DeviceConnection implements Closeable {
 		this.port = port;
 		this.listener = listener;
 		this.foreground = true; /* Connections start in the foreground */
+
+		try{
+			commandQueue.add((ON_CONNECTED_COMMAND + "\n").getBytes("UTF-8"));
+		}catch (UnsupportedEncodingException e)
+		{
+		}
 	}
 	
 	public String getHost() {
